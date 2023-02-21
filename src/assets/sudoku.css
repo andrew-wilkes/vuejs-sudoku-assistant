@@ -1,0 +1,184 @@
+.ui {
+    margin: 0 0 30px 20px;
+    padding: 20px;
+    background-color: #54bb98;
+    border: 1px solid 1px solid #535353;
+    border-radius: 10px;
+    display: grid;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px 0;
+}
+
+.ui button {
+    background-color: #439da2;
+}
+
+.sudoku-grid {
+    display: grid;
+    grid-template-columns: min-content min-content min-content;
+    gap: 4px;
+    background-color: black;
+    border: 4px solid black;
+    margin: 0 auto 30px auto;
+}
+
+.timer {
+    display: flex;
+    align-items: center;
+    border: 1px solid #409d7e;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.timer > * {
+    margin-right: 5px;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.controls button {
+    margin: 0 10px 10px 0;
+}
+
+#time {
+    color: white;
+    font-size: larger;
+}
+
+.box, .numbers {
+    display: grid;
+    grid-template-columns: min-content min-content min-content;
+    gap: 2px;
+    justify-content: center;
+}
+
+.numbers div {
+    text-align: center;
+    font-size: smaller;
+}
+
+.numbers {
+    gap: 10px;
+}
+
+.numbers button {
+    font-size: larger;
+    width: 30px;
+    height: 30px;
+}
+
+.cell {
+    background-color: #e8e8e8;
+    color: black;
+    width: 50px;
+    height: 50px;
+}
+
+.highlighted {
+    background-color: rgb(186, 193, 201);
+}
+
+.selected {
+    background-color: rgb(136, 192, 255);
+}
+
+.matched {
+    background-color: rgb(197, 252, 197);
+}
+
+.cell a:hover {
+    color: black;
+}
+
+.cell-top {
+    font-weight: bold;
+    font-size:larger;
+}
+
+.cell-grid {
+    display: grid;
+    grid-template-columns: min-content min-content min-content;
+    justify-content:space-around;
+    align-items: center;
+}
+
+.num {
+    text-align: center;
+    color: rgb(75, 75, 75);
+    font-size: x-small;
+}
+
+.modal {
+  display: none; /* Hidden by default */
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  top: 50px;
+}
+
+.panel {
+  width: 500px;
+  height: 300px;
+  background-color: #535353;
+  color: white;
+  padding: 20px;
+  border: 1px solid #535353;
+  border-radius: 10px;
+}
+
+#puzzle {
+    width: 100%;
+}
+
+.close {
+    margin-top: 20px;
+}
+
+.close:hover,
+.close:focus {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.list {
+    display: flex;
+    justify-content: center;
+}
+
+.list {
+    text-align: left;
+}
+
+.status {
+    text-align: center;
+    color: #0d3313;
+}
+
+.given {
+    color:#555115;
+}
+
+.n1, .n2, .n3, .n4, .n5, .n6, .n7, .n8, .n9 {
+    color: rgb(75, 75, 75);
+}
+
+.panel-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: green;
+}
