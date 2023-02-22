@@ -1,5 +1,5 @@
 <template>
-    <div class="cell">
+    <div class="cell" :class="{ highlighted: highlighted }">
         <button v-if="candidates.length < 2" type="button" class="cell cell-top" :class="{ given: isGiven }">{{ topValue }}</button>
         <button v-else-if="candidates.length < 3" type="button" class="cell cell-str">
             <span v-for="n in candidates" :class="'n' + n">{{ n }}</span>
@@ -14,9 +14,12 @@
 export default {
   data() {
     return {
-        number: 8,
-        candidates: "1289"
     }
+  },
+  props: {
+    highlighted: Boolean,
+    number: Number,
+    candidates: String
   },
   computed: {
     topValue() {

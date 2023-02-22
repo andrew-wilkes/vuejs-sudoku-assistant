@@ -79,8 +79,8 @@
     height: 50px;
 }
 
-.highlighted {
-    background-color: rgb(186, 193, 201);
+.highlighted button {
+    background-color: rgb(93, 144, 202);
 }
 
 .selected {
