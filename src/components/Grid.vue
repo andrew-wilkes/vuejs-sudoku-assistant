@@ -8,6 +8,7 @@
 
 <script>
 import Cell from "./Cell.vue";
+import {numbers} from "../state";
 
 export default {
   components: {
@@ -17,6 +18,9 @@ export default {
     cellClicked(event) {
       console.log(event.target.id);
     }
+  },
+  mounted() {
+    console.log(numbers.grid);
   }
 }
 
