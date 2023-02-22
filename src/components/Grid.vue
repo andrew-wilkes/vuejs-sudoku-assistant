@@ -1,7 +1,7 @@
 <template>
   <div class="sudoku-grid">
     <div class="box" v-for="n in 9">
-      <Cell v-for="m in 9" @click="cellClicked" :id="`${n}-${m}`"></Cell>
+      <Cell v-for="m in 9" :id="`${n}-${m}`" @click="cellClicked(n, m)"></Cell>
     </div>
   </div>
 </template>
@@ -15,8 +15,8 @@ export default {
    Cell
   },
   methods: {
-    cellClicked(event) {
-      console.log(event.target.id);
+    cellClicked(x, y) {
+      console.log(x, y);
     }
   },
   mounted() {
