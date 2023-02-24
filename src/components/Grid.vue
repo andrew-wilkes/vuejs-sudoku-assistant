@@ -1,29 +1,33 @@
 <template>
   <div class="sudoku-grid">
     <div class="box" v-for="n in 9">
-      <Cell v-for="m in 9" :id="`${n}-${m}`" @click="cellClicked(n, m)" highlighted="true" :number="getNum(m)" candidates="2"></Cell>
+      <Cell v-for="m in 9" :id="`${n}-${m}`" @click="cellClicked(n, m)" :highlighted="true" :idx="getIndex(n, m)"></Cell>
     </div>
   </div>
 </template>
 
 <script>
 import Cell from "./Cell.vue";
-import {numbers} from "../state";
+import { selectedCell } from "../state";
+import { numberIndex } from "../utils";
 
 export default {
   components: {
    Cell
   },
   methods: {
-    cellClicked(x, y) {
-      console.log(x, y);
+    cellClicked(bid, cid) {
+      if (selectedCell.bid == bid && selectedCell.cid == cid) {
+        selectedCell.bid = -1; // Unselect the cell
+      } else {
+        selectedCell.bid = bid;
+        selectedCell.cid = cid;
+        selectedCell.idx = numberIndex(bid, cid);
+      }
     },
-    getNum(n) {
-      return n * 2;
+    getIndex(bid, cid) {
+      return numberIndex(bid, cid);
     }
-  },
-  mounted() {
-    console.log(numbers.grid);
   }
 }
 
