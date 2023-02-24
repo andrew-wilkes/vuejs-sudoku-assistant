@@ -1,15 +1,16 @@
 <template>
   <div class="sudoku-grid">
     <div class="box" v-for="n in 9">
-      <Cell v-for="m in 9" :id="`${n}-${m}`" @click="cellClicked(n, m)" :highlighted="true" :idx="getIndex(n, m)"></Cell>
+      <Cell v-for="m in 9" @click="cellClicked(n, m)" :idx="getIndex(n, m)"></Cell>
     </div>
   </div>
 </template>
 
 <script>
 import Cell from "./Cell.vue";
-import { selectedCell } from "../state";
+import { cells } from "../state";
 import { numberIndex } from "../utils";
+import { getPeers } from "../utils";
 
 export default {
   components: {
@@ -17,18 +18,20 @@ export default {
   },
   methods: {
     cellClicked(bid, cid) {
-      if (selectedCell.bid == bid && selectedCell.cid == cid) {
-        selectedCell.bid = -1; // Unselect the cell
+      if (cells.selected.bid == bid && cells.selected.cid == cid) {
+        cells.selected.idx = -1; // Unselect the cell
+        cells.selected.bid = -1;
+        cells.peers = [];
       } else {
-        selectedCell.bid = bid;
-        selectedCell.cid = cid;
-        selectedCell.idx = numberIndex(bid, cid);
+        cells.selected.bid = bid;
+        cells.selected.cid = cid;
+        cells.selected.idx = numberIndex(bid - 1, cid - 1);
+        cells.peers = getPeers(cells.selected.idx);
       }
     },
     getIndex(bid, cid) {
-      return numberIndex(bid, cid);
+      return numberIndex(bid - 1, cid - 1);
     }
   }
 }
-
 </script>

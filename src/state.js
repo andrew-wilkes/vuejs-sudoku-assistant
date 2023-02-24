@@ -4,21 +4,26 @@ import { reactive } from 'vue'
 export const numbers = reactive({
   grid: [],
   candidates: [],
-  solution: []
+  solution: [],
 })
 
-export const selectedCell = {
-  idx: -1,
-  bid: -1,
-  cid: -1
-}
+export const cells = reactive({
+  selected: {
+    idx: -1,
+    bid: -1,
+    cid: -1
+  },
+  peers: []
+})
 
-export const config = {
+export const highlightedCells = [];
+
+export const config = reactive({
   remove: true,
   same: true,
   invalid: true,
   remaining: true
-}
+})
 
 export const resetNumbers = () => {
   numbers.grid = Array(81).fill(0);

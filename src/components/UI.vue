@@ -7,7 +7,7 @@
         <button><span class="material-symbols-outlined" @click="reset">restart_alt</span></button>
     </div>
     <div class="numbers">
-      <div v-for="n in 9"><button>{{ n }}</button><div class="count">{{ numberCounts[n - 1] }}</div></div>
+      <div v-for="n in 9"><button @click="this.handleNumberInput(n)">{{ n }}</button><div class="count">{{ numberCounts[n - 1] }}</div></div>
     </div>
     <div class="controls">
         <button style="width: 24px; box-sizing: content-box;" @click="zero">&nbsp;</button>
@@ -46,6 +46,9 @@ const CHECK = {
 import { resetNumbers } from "../state";
 import { numbers } from "../state";
 import { secondsToHHMMSS } from "../utils";
+import { cells } from "../state";
+import { config } from "../state";
+import { getPeers } from "../utils";
 
 export default {
   data() {
@@ -54,13 +57,16 @@ export default {
       numbers,
       timerState: TIMER.stopped,
       timeCountSeconds: 0,
-      theTime: ""
+      theTime: "",
+      gameState: STATUS.givens,
+      config
     }
   },
   mounted() {
     this.numberCounts = Array(10).fill(9);
     setInterval(this.theTimer, 1000);
     this.updateTimeDisplay();
+    document.addEventListener('keydown', (event) => this.handleNumberInput(event.key));
   },
   methods: {
     play(event) {
@@ -84,7 +90,7 @@ export default {
       }
     },
     zero(event) {
-      this.numberCounts[0]++;
+      this.handleNumberInput(0);
     },
     notes(event) {
 
@@ -117,6 +123,65 @@ export default {
     },
     updateTimeDisplay() {
       this.theTime = secondsToHHMMSS(this.timeCountSeconds);
+    },
+    handleNumberInput(key) {
+      let n = parseInt(key); // This allows the space bar to produce 0 for isNaN
+      n = isNaN(n) ? 0 : n;
+      let idx = cells.selected.idx;
+      if (idx < 0) return; // No selected cell
+      if (this.gameState == STATUS.notes) {
+        if (this.numbers.grid[idx] > 0) return; // Can't add notes to completed cell
+        if (n == 0) return; // Note entry not 1 - 9
+        if (config.invalid && !this.isPlacementValid(n, idx, false)) return;
+        // Add or remove note number from candidates string
+        let cidx = this.numbers.candidates[idx].indexOf('' + n);
+        if (cidx < 0) {
+          this.numbers.candidates[idx] = this.numbers.candidates[idx] + n;
+        } else {
+          this.numbers.candidates[idx] = this.numbers.candidates[idx].replace('' + n, '');
+        }
+      } else if (this.numbers.grid[idx] < 10 || this.gameState == STATUS.givens) {
+        if (!this.isPlacementValid(n, idx, this.gameState == STATUS.givens)) return;
+        // Cell does not contain a given number or we are adding a given number
+        if (n > 0) {
+          if (this.config.remove) this.removeRelatedCandidateNumbers(idx, n);
+          if (this.gameState == STATUS.givens) n += 10;
+        }
+        this.numbers.grid[idx] = n;
+        this.numbers.candidates[idx] = "";
+      }
+    },
+    isPlacementValid(n, idx, placingGiven) {
+      if (n == 0) return true;
+      if (placingGiven) n += 10;
+      // Scan row and column
+      let x = Math.floor(idx / 9) * 9;
+      let y = idx % 9;
+      for (let i = 0; i < 9; i++) {
+          if (this.getGridNumber(x, placingGiven) == n) return false;
+          x += 1;
+          if (this.getGridNumber(y, placingGiven) == n) return false;
+          y += 9;
+      }
+      // Scan box
+      let b = Math.floor(idx / 27) * 27 + Math.floor((idx % 9) / 3) * 3;
+      for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 3; j++) {
+              if (this.getGridNumber(b + j, placingGiven) == n) return false;
+          }
+          b += 9;
+      }
+      return true;
+    },
+    getGridNumber(idx, placingGiven) {
+      let n = this.numbers[idx];
+      if (n > 9 && !placingGiven) n -= 10;
+      return n;
+    },
+    removeRelatedCandidateNumbers(idx, n) {
+      for (let pidx of getPeers(idx)) {
+        this.numbers.candidates[pidx] = this.numbers.candidates[pidx].replace('' + n, '');
+      }
     }
   }
 }

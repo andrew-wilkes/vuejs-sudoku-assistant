@@ -72,7 +72,7 @@
     height: 30px;
 }
 
-.cell {
+.cell button {
     background-color: #e8e8e8;
     color: black;
     width: 50px;
@@ -83,7 +83,7 @@
     background-color: rgb(93, 144, 202);
 }
 
-.selected {
+.selected button {
     background-color: rgb(136, 192, 255);
 }
 

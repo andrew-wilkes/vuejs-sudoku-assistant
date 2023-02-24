@@ -1,10 +1,10 @@
 <template>
-    <div class="cell" :class="{ highlighted: highlighted }">
-        <button v-if="numbers.candidates.length < 2" type="button" class="cell cell-top" :class="{ given: isGiven }">{{ topValue }}</button>
-        <button v-else-if="numbers.candidates.length < 3" type="button" class="cell cell-str">
-            <span v-for="n in numbers.candidates" :class="'n' + n">{{ n }}</span>
+    <div class="cell" :class="{ selected: isSelected, highlighted: isHighlighted }">
+        <button v-if="numbers.candidates[idx].length < 2" type="button" class="cell cell-top" :class="{ given: isGiven }">{{ topValue }}</button>
+        <button v-else-if="numbers.candidates[idx].length < 3" type="button" class="cell cell-str">
+            <span v-for="n in numbers.candidates[idx]" :class="'n' + n">{{ n }}</span>
         </button>
-        <button v-else type="button" class="cell cell-grid">
+        <button v-else type="button" class="cell-grid">
             <div v-for="n in 9" class="num" :class="'n' + n">{{ candidate(n) }}</div>
         </button>
     </div>
@@ -12,31 +12,37 @@
 
 <script>
 import { numbers } from "../state";
+import { cells } from "../state";
 
 export default {
   data() {
     return {
-      numbers,
-      number: 5
+      numbers
     }
   },
   props: {
-    highlighted: Boolean,
     idx: Number
   },
   computed: {
     topValue() {
-        if (this.number == 0) return "";
-        if (this.number > 10) return this.number - 10;
-        return this.number;
+        let n = this.numbers.grid[this.idx];
+        if (n == 0) return "";
+        if (n > 10) return n - 10;
+        return n;
     },
     isGiven() {
-        return this.number > 10;
+      return this.numbers.grid[this.idx] > 10;
+    },
+    isHighlighted() {
+      return cells.peers.indexOf('' + this.idx) > -1;
+    },
+    isSelected() {
+      return cells.selected.idx == this.idx;
     }
   },
   methods: {
     candidate(n) {
-        return this.numbers.candidates[0].indexOf('' + n) > -1 ? n : '';
+      return this.numbers.candidates[this.idx].indexOf('' + n) > -1 ? n : '';
     }
   }
 }
