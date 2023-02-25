@@ -146,6 +146,8 @@ export default {
       resetNumbers();
     },
     check(event) {
+      cells.peers = []; // Unhighlight cells
+      cells.selected.idx = -1;
       if (this.gameState != STATUS.solving) return;
       switch(this.checkState) {
         case CHECK.no:
