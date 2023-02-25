@@ -25,7 +25,7 @@ export const config = reactive({
 
 export const resetNumbers = () => {
   numbers.grid = Array(81).fill(0);
-  numbers.candidates = Array(81).fill("123456789");
+  numbers.candidates = Array(81).fill('');
   numbers.solution = [];
 }
 

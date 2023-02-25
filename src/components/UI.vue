@@ -60,7 +60,9 @@ export default {
       timeCountSeconds: 0,
       theTime: "",
       gameState: STATUS.givens,
-      config
+      config,
+      addedAllCandidates: false,
+      lastCellToAddCandidatesTo: -1
     }
   },
   mounted() {
@@ -109,9 +111,32 @@ export default {
       }
     },
     add(event) {
-
+      let idx = cells.selected.idx;
+      if (this.lastCellToAddCandidatesTo == idx) {
+        this.numbers.candidates[idx] = "";
+        this.lastCellToAddCandidatesTo = -1;
+      } else if (idx > -1 && this.numbers.grid[idx] == 0) {
+        this.numbers.candidates[idx] = "123456789";
+        this.reduceCandidateNumbersOfCell(idx);
+        this.lastCellToAddCandidatesTo = idx;
+      }
     },addAll(event) {
-
+      cells.selected.idx = -1;
+      this.lastCellToAddCandidatesTo = -1;
+      if (this.addedAllCandidates) {
+        this.addedAllCandidates = false;
+        this.numbers.candidates.fill("");
+      } else {
+        cells.peers = []; // Remove highlights
+        this.numbers.candidates.fill("123456789");
+        for (let idx in this.numbers.grid) {
+          if (this.numbers.grid[idx] > 0) {
+            this.numbers.candidates[idx] = "";
+            this.removeRelatedCandidateNumbers(idx, this.numbers.grid[idx]);
+          }
+        }
+        this.addedAllCandidates = true;
+      }
     },
     settings(event) {
 
@@ -189,8 +214,18 @@ export default {
       return n;
     },
     removeRelatedCandidateNumbers(idx, n) {
+      if (n > 10) n -= 10;
       for (let pidx of getPeers(idx)) {
         this.numbers.candidates[pidx] = this.numbers.candidates[pidx].replace('' + n, '');
+      }
+    },
+    reduceCandidateNumbersOfCell(idx) {
+      for (let pidx of getPeers(idx)) {
+        let n = this.numbers.grid[pidx];
+        if (n > 10) n -= 10;
+        if (n > 0) {
+          this.numbers.candidates[idx] = this.numbers.candidates[idx].replace('' + n, '');
+        }
       }
     }
   }
