@@ -1,6 +1,7 @@
 <template>
     <div class="cell" :class="{ selected: isSelected, highlighted: isHighlighted }">
-        <button v-if="numbers.candidates[idx].length < 2" type="button" class="cell cell-top" :class="{ given: isGiven }">{{ topValue }}</button>
+        <button v-if="numbers.showSolution" type="button" class="cell cell-top" :class="{ given: isGiven }">{{ numbers.solution[idx] }}</button>
+        <button v-else-if="numbers.grid[idx] > 0" type="button" class="cell cell-top" :class="{ given: isGiven, red: isWrong }">{{ topValue }}</button>
         <button v-else-if="numbers.candidates[idx].length < 3" type="button" class="cell cell-str">
             <span v-for="n in numbers.candidates[idx]" :class="'n' + n">{{ n }}</span>
         </button>
@@ -38,6 +39,10 @@ export default {
     },
     isSelected() {
       return cells.selected.idx == this.idx;
+    },
+    isWrong() {
+      let n = this.numbers.grid[this.idx];
+      return this.numbers.showWrong && n > 0 && n < 10 && n != this.numbers.solution[this.idx];
     }
   },
   methods: {

@@ -7,7 +7,7 @@
         <button><span class="material-symbols-outlined" @click="reset">restart_alt</span></button>
     </div>
     <div class="numbers">
-      <div v-for="n in 9"><button @click="this.handleNumberInput(n)">{{ n }}</button><div class="count">{{ numberCounts[n - 1] }}</div></div>
+      <div v-for="n in 9"><button @click="this.handleNumberInput(n)">{{ n }}</button><div class="count">{{ numberCounts[n] }}</div></div>
     </div>
     <div class="controls">
         <button style="width: 24px; box-sizing: content-box;" @click="zero">&nbsp;</button>
@@ -62,7 +62,8 @@ export default {
       gameState: STATUS.givens,
       config,
       addedAllCandidates: false,
-      lastCellToAddCandidatesTo: -1
+      lastCellToAddCandidatesTo: -1,
+      checkState: CHECK.no
     }
   },
   mounted() {
@@ -145,7 +146,28 @@ export default {
       resetNumbers();
     },
     check(event) {
-
+      if (this.gameState != STATUS.solving) return;
+      switch(this.checkState) {
+        case CHECK.no:
+          let numGuesses = 0;
+          this.numbers.grid.forEach(n => { if (n > 0 && n < 10) numGuesses++ })
+          if (numGuesses > 0) {
+            this.checkState = CHECK.yes;
+            this.numbers.showWrong = true;
+          } else {
+            this.checkState = CHECK.solution;
+            this.numbers.showSolution = true;
+          }
+          break;
+        case CHECK.yes:
+          this.checkState = CHECK.solution;
+          this.numbers.showSolution = true;
+          break;
+        case CHECK.solution:
+          this.checkState = CHECK.no;
+          this.numbers.showSolution = false;
+          break;
+      }
     },
     info(event) {
 
@@ -167,7 +189,7 @@ export default {
       if (this.gameState == STATUS.notes) {
         if (this.numbers.grid[idx] > 0) return; // Can't add notes to completed cell
         if (n == 0) return; // Note entry not 1 - 9
-        if (config.invalid && !this.isPlacementValid(n, idx, false)) return;
+        if (config.invalid && this.doPeersContainNumber(idx, n, false)) return;
         // Add or remove note number from candidates string
         let cidx = this.numbers.candidates[idx].indexOf('' + n);
         if (cidx < 0) {
@@ -175,38 +197,21 @@ export default {
         } else {
           this.numbers.candidates[idx] = this.numbers.candidates[idx].replace('' + n, '');
         }
-      } else if (this.numbers.grid[idx] < 10 || this.gameState == STATUS.givens) {
-        if (!this.isPlacementValid(n, idx, this.gameState == STATUS.givens)) return;
-        // Cell does not contain a given number or we are adding a given number
+      } else {
+        // Check if the number may be applied
+        if (this.numbers.grid[idx] > 10 && n < 10 && this.gameState != STATUS.givens) return;
         if (n > 0) {
+          if (this.doPeersContainNumber(idx, n, this.gameState == STATUS.givens)) return;
+          // Cell does not contain a given number or we are adding a given number
           if (this.config.remove) this.removeRelatedCandidateNumbers(idx, n);
           if (this.gameState == STATUS.givens) n += 10;
         }
         this.numbers.grid[idx] = n;
         this.numbers.candidates[idx] = "";
+        this.updateNumberCounts();
+        this.numbers.showWrong = false;
+        this.checkState = CHECK.no;
       }
-    },
-    isPlacementValid(n, idx, placingGiven) {
-      if (n == 0) return true;
-      if (placingGiven) n += 10;
-      // Scan row and column
-      let x = Math.floor(idx / 9) * 9;
-      let y = idx % 9;
-      for (let i = 0; i < 9; i++) {
-          if (this.getGridNumber(x, placingGiven) == n) return false;
-          x += 1;
-          if (this.getGridNumber(y, placingGiven) == n) return false;
-          y += 9;
-      }
-      // Scan box
-      let b = Math.floor(idx / 27) * 27 + Math.floor((idx % 9) / 3) * 3;
-      for (let i = 0; i < 3; i++) {
-          for (let j = 0; j < 3; j++) {
-              if (this.getGridNumber(b + j, placingGiven) == n) return false;
-          }
-          b += 9;
-      }
-      return true;
     },
     getGridNumber(idx, placingGiven) {
       let n = this.numbers[idx];
@@ -226,6 +231,22 @@ export default {
         if (n > 0) {
           this.numbers.candidates[idx] = this.numbers.candidates[idx].replace('' + n, '');
         }
+      }
+    },
+    doPeersContainNumber(idx, n, placingGiven) {
+      if (placingGiven) n += 10;
+      for (let pidx of getPeers(idx)) {
+        let x = this.numbers.grid[pidx];
+        if (x > 10 && !placingGiven) x -= 10;
+        if (x == n) return true;
+      }
+      return false;
+    },
+    updateNumberCounts() {
+      this.numberCounts.fill(9);
+      for (let n of this.numbers.grid) {
+        if (n > 10) n -= 10;
+        this.numberCounts[n]--;
       }
     }
   }

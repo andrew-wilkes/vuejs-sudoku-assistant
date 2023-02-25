@@ -5,6 +5,8 @@ export const numbers = reactive({
   grid: [],
   candidates: [],
   solution: [],
+  showSolution: false,
+  showWrong: false
 })
 
 export const cells = reactive({
@@ -27,6 +29,8 @@ export const resetNumbers = () => {
   numbers.grid = Array(81).fill(0);
   numbers.candidates = Array(81).fill('');
   numbers.solution = [];
+  numbers.showSolution = false;
+  numbers.showWrong = false;
 }
 
 resetNumbers();
