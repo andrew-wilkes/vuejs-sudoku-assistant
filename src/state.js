@@ -16,8 +16,6 @@ export const cells = reactive({
   peers: []
 })
 
-export const highlightedCells = [];
-
 export const config = reactive({
   remove: true,
   same: true,

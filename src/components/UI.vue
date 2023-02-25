@@ -1,6 +1,6 @@
 <template>
   <div class="ui">
-    <div class="status"></div>
+    <div class="status">{{ gameState }}</div>
     <div class="timer">
         <span>{{ theTime }}</span>
         <button><span class="material-symbols-outlined" @click="play">play_pause</span></button>
@@ -49,6 +49,7 @@ import { secondsToHHMMSS } from "../utils";
 import { cells } from "../state";
 import { config } from "../state";
 import { getPeers } from "../utils";
+import { getSolution } from "../solver";
 
 export default {
   data() {
@@ -93,10 +94,19 @@ export default {
       this.handleNumberInput(0);
     },
     notes(event) {
-
+      if (this.gameState == STATUS.solving) {
+        this.gameState = STATUS.notes;
+      } else {
+          if (this.gameState == STATUS.givens) this.numbers.solution = getSolution(this.numbers.grid);
+          this.gameState = STATUS.solving;
+      }
     },
     givens(event) {
-
+      if (this.gameState == STATUS.givens) {
+        this.gameState = STATUS.text;
+      } else {
+        this.gameState = STATUS.givens;
+      }
     },
     add(event) {
 
