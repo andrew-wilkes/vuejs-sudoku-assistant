@@ -1,3 +1,5 @@
+var count = 50000;
+
 export const getSolution = (numbers) => {
     let digits = "123456789";
     let cand = Array(81).fill(digits);
@@ -10,13 +12,14 @@ export const getSolution = (numbers) => {
             removeNumberFromPeers(i, n, cand);
         }
     }
-    solve(-1, cand, grid);
+    if (!solve(-1, cand, grid) || count < 1) grid.fill(0);
     return grid;
 }
 
 function solve(idx, cand, grid) {
     // Check for completion
-	if (grid.indexOf(0) < 0) return true;
+    count--;
+	if (grid.indexOf(0) < 0 || count < 1) return true;
     // Find the next cell with the least number of possible values
     let cellIdx = -1;
     let cellSize = 10;
