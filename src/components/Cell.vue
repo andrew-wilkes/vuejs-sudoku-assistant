@@ -12,9 +12,7 @@
 </template>
 
 <script>
-import { numbers } from "../state";
-import { cells } from "../state";
-import { config } from "../state";
+import { numbers, cells, config } from "../state";
 
 export default {
   data() {

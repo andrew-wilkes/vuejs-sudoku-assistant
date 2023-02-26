@@ -6,7 +6,9 @@ export const numbers = reactive({
   candidates: [],
   solution: [],
   showSolution: false,
-  showWrong: false
+  showWrong: false,
+  newPuzzle: false,
+  newGivens: false
 })
 
 export const cells = reactive({

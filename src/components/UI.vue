@@ -41,12 +41,8 @@ const CHECK = {
   solution: 2
 }
 
-import { resetNumbers } from "../state";
-import { numbers } from "../state";
-import { secondsToHHMMSS } from "../utils";
-import { cells } from "../state";
-import { config } from "../state";
-import { getPeers } from "../utils";
+import { resetNumbers, numbers, cells, config } from "../state";
+import { secondsToHHMMSS, getPeers } from "../utils";
 import { getSolution } from "../solver";
 
 export default {
@@ -62,6 +58,14 @@ export default {
       addedAllCandidates: false,
       lastCellToAddCandidatesTo: -1,
       checkState: CHECK.no
+    }
+  },
+  watch: {
+    'numbers.newPuzzle'(update) {
+      if (update) {
+        numbers.newPuzzle = false;
+        this.startSolving();
+      }
     }
   },
   mounted() {
@@ -98,16 +102,26 @@ export default {
       if (this.gameState == STATUS.solving) {
         this.gameState = STATUS.notes;
       } else {
-          if (this.gameState == STATUS.givens) this.numbers.solution = getSolution(this.numbers.grid);
-          this.gameState = STATUS.solving;
+          if (this.gameState == STATUS.givens) {
+            numbers.newGivens = true;
+            this.startSolving();
+          } else {
+            this.gameState = STATUS.solving;
+          }
       }
     },
     givens(event) {
       if (this.gameState == STATUS.givens) {
-        this.gameState = STATUS.text;
+        numbers.newGivens = true;
+        this.startSolving();
       } else {
         this.gameState = STATUS.givens;
       }
+    },
+    startSolving() {
+      this.gameState = STATUS.solving;
+      this.unselect();
+      this.numbers.solution = getSolution(this.numbers.grid);
     },
     add(event) {
       let idx = cells.selected.idx;
@@ -120,7 +134,7 @@ export default {
         this.lastCellToAddCandidatesTo = idx;
       }
     },addAll(event) {
-      cells.selected.idx = -1;
+      this.unselect();
       this.lastCellToAddCandidatesTo = -1;
       if (this.addedAllCandidates) {
         this.addedAllCandidates = false;
@@ -139,13 +153,14 @@ export default {
     },
     wipe(event) {
       resetNumbers();
+      this.unselect();
+    },
+    unselect() {
       cells.peers = []; // Unhighlight cells
       cells.selected.idx = -1;
     },
     check(event) {
-      cells.peers = []; // Unhighlight cells
-      cells.selected.idx = -1;
-      cells.selected.bid = -1;
+      this.unselect();
       if (this.gameState != STATUS.solving) return;
       switch(this.checkState) {
         case CHECK.no:
@@ -209,6 +224,7 @@ export default {
         this.updateNumberCounts();
         this.numbers.showWrong = false;
         this.checkState = CHECK.no;
+        this.numbers.showSolution = false;
       }
     },
     getGridNumber(idx, placingGiven) {

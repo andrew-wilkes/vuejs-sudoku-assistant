@@ -2,7 +2,18 @@ export const numberIndex = (bid, cid) => {
     return cid % 3 + Math.floor(cid / 3) * 9 + (bid % 3) * 3 + Math.floor(bid / 3) * 27;
 }
 
+export const stringToNumArray = (s) => {
+    let numbers = Array(81).fill(0);
+    for (let i = 0; i < s.length; i++) {
+        if (i == numbers.length) break;
+        let n = s[i] == '.' ? 0 : parseInt(s[i]) + 10;
+        numbers[i] = n;
+    }
+    return numbers;
+}
+
 export const numsToString = (numArray) => {
+    // Convert given numbers to base number and others to zero
     let nums = numArray.map(x => x > 10 ? x - 10 : 0);
     let sum = nums.reduce((a, s) => a + s);
     if (sum == 0) return "";
