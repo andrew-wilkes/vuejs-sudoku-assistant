@@ -3,22 +3,20 @@
     <div class="status">{{ gameState }}</div>
     <div class="timer">
         <span>{{ theTime }}</span>
-        <button><span class="material-symbols-outlined" @click="play">play_pause</span></button>
-        <button><span class="material-symbols-outlined" @click="reset">restart_alt</span></button>
     </div>
     <div class="numbers">
-      <div v-for="n in 9"><button @click="this.handleNumberInput(n)">{{ n }}</button><div class="count">{{ numberCounts[n] }}</div></div>
+      <div v-for="n in 9"><button @click="this.handleNumberInput(n)">{{ n }}</button><div v-if="config.remaining" class="count">{{ numberCounts[n] }}</div></div>
     </div>
     <div class="controls">
         <button style="width: 24px; box-sizing: content-box;" @click="zero">&nbsp;</button>
         <button><span class="material-symbols-outlined" @click="notes">edit</span></button>
         <button><span class="material-symbols-outlined" @click="givens">edit_square</span></button>
         <button><span class="material-symbols-outlined" @click="add">add</span></button>
-        <button><span class="material-symbols-outlined" @click="addAll">add_circle</span></button>
-        <button><span class="material-symbols-outlined" @click="settings">settings</span></button>    
-        <button><span class="material-symbols-outlined" @click="wipe">delete</span></button>
+        <button><span class="material-symbols-outlined" @click="addAll">add_circle</span></button> 
         <button><span class="material-symbols-outlined" @click="check">check</span></button>
-        <button><span class="material-symbols-outlined" @click="info">info</span></button>
+        <button><span class="material-symbols-outlined" @click="play">play_pause</span></button>
+        <button><span class="material-symbols-outlined" @click="reset">restart_alt</span></button>
+        <button><span class="material-symbols-outlined" @click="wipe">delete</span></button>
     </div>
   </div>
 </template>
@@ -139,15 +137,15 @@ export default {
         this.addedAllCandidates = true;
       }
     },
-    settings(event) {
-
-    },
     wipe(event) {
       resetNumbers();
+      cells.peers = []; // Unhighlight cells
+      cells.selected.idx = -1;
     },
     check(event) {
       cells.peers = []; // Unhighlight cells
       cells.selected.idx = -1;
+      cells.selected.bid = -1;
       if (this.gameState != STATUS.solving) return;
       switch(this.checkState) {
         case CHECK.no:
@@ -164,15 +162,13 @@ export default {
         case CHECK.yes:
           this.checkState = CHECK.solution;
           this.numbers.showSolution = true;
+          this.numbers.showWrong = false;
           break;
         case CHECK.solution:
           this.checkState = CHECK.no;
           this.numbers.showSolution = false;
           break;
       }
-    },
-    info(event) {
-
     },
     theTimer() {
       if (this.timerState == TIMER.running) {
