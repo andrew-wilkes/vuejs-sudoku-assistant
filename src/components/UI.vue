@@ -8,15 +8,15 @@
       <div v-for="n in 9"><button @click="this.handleNumberInput(n)">{{ n }}</button><div v-if="config.remaining" class="count">{{ numberCounts[n] }}</div></div>
     </div>
     <div class="controls">
-        <button style="width: 24px; box-sizing: content-box;" @click="zero">&nbsp;</button>
-        <button><span class="material-symbols-outlined" @click="notes">edit</span></button>
-        <button><span class="material-symbols-outlined" @click="givens">edit_square</span></button>
-        <button><span class="material-symbols-outlined" @click="add">add</span></button>
-        <button><span class="material-symbols-outlined" @click="addAll">add_circle</span></button> 
-        <button><span class="material-symbols-outlined" @click="check">check</span></button>
-        <button><span class="material-symbols-outlined" @click="play">play_pause</span></button>
-        <button><span class="material-symbols-outlined" @click="reset">restart_alt</span></button>
-        <button><span class="material-symbols-outlined" @click="wipe">delete</span></button>
+        <button style="width: 24px; box-sizing: content-box;" @click="zero" title="Clear the selected cell">&nbsp;</button>
+        <button><span class="material-symbols-outlined" @click="notes" title="Alternate between Solving and adding Notes">edit</span></button>
+        <button><span class="material-symbols-outlined" @click="givens" title="Alternate between Solving and adding Given numbers">edit_square</span></button>
+        <button><span class="material-symbols-outlined" @click="add" title="Add/remove possible candidate numbers to the selected cell">add</span></button>
+        <button><span class="material-symbols-outlined" @click="addAll" title="Add/remove all possible candidate numbers to the grid">add_circle</span></button> 
+        <button><span class="material-symbols-outlined" @click="check" title="Highlight right/wrong numbers or show the complete solution">check</span></button>
+        <button><span class="material-symbols-outlined" @click="play" title="Start or pause the timer">play_pause</span></button>
+        <button><span class="material-symbols-outlined" @click="reset" title="Stop and reset the timer">restart_alt</span></button>
+        <button><span class="material-symbols-outlined" @click="wipe" title="Clear the grid">delete</span></button>
     </div>
   </div>
 </template>

@@ -2,7 +2,7 @@
     <div>
     <h3>Puzzle String</h3>
     <p>Use this to enter a puzzle string or to copy given values as a string to save.</p>
-    <div class="pin"><input @keydown.stop @keyup="filterChars" type="text" placeholder="1..6.3..8..9" v-model="puzzle"/> <button type="button" @click="applyPuzzle">Apply</button></div>
+    <div class="pin"><input @keydown.stop @keyup="filterChars" type="text" placeholder="1..6.3..8..9" v-model="puzzle"/> <button type="button" @click="applyPuzzle" title="Initialize the grid with these numbers">Apply</button></div>
     </div>
 </template>
 
