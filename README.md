@@ -27,3 +27,12 @@ npm run dev
 ```sh
 npm run build
 ```
+
+## Links
+
+https://www.stolaf.edu/people/hansonr/sudoku/explain.htm#almost
+
+https://www.sudokuwiki.org/sudoku.htm
+
+...52.1..54....67......4...3..741..6.........1..39...2...9......69....38..4.58
+
