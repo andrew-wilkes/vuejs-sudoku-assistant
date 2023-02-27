@@ -1,7 +1,7 @@
 <template>
     <div class="cell" :class="{ selected: isSelected, highlighted: isHighlighted }">
         <button v-if="numbers.showSolution" type="button" class="cell cell-top" :class="{ given: isGiven }">{{ numbers.solution[idx] }}</button>
-        <button v-else-if="numbers.grid[idx] > 0" type="button" class="cell cell-top" :class="{ given: isGiven, red: isWrong, green: isSame }">{{ topValue }}</button>
+        <button v-else-if="numbers.grid[idx] > 0" type="button" class="cell cell-top" :class="{ given: isGiven, red: isWrong, green: isSame || isRight }">{{ topValue }}</button>
         <button v-else-if="numbers.candidates[idx].length < 3" type="button" class="cell cell-str">
             <span v-for="n in numbers.candidates[idx]" :class="{ green: getSelectedNum == n && config.same }">{{ n }}</span>
         </button>
@@ -43,6 +43,10 @@ export default {
     isWrong() {
       let n = this.numbers.grid[this.idx];
       return this.numbers.showWrong && n > 0 && n < 10 && n != this.numbers.solution[this.idx];
+    },
+    isRight() {
+      let n = this.numbers.grid[this.idx];
+      return this.numbers.showWrong && n > 0 && n < 10 && n == this.numbers.solution[this.idx];
     },
     isSame() {
       let n = this.numbers.grid[this.idx];

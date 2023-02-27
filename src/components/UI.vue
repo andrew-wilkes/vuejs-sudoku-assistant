@@ -75,7 +75,7 @@ export default {
     document.addEventListener('keydown', (event) => this.handleNumberInput(event.key));
   },
   methods: {
-    play(event) {
+    play() {
       switch(this.timerState) {
         case TIMER.stopped:
         case TIMER.paused:
@@ -86,7 +86,7 @@ export default {
         break;
       }
     },
-    reset(event) {
+    reset() {
       switch(this.timerState) {
         case TIMER.paused:
         case TIMER.running:
@@ -95,10 +95,10 @@ export default {
           this.updateTimeDisplay();
       }
     },
-    zero(event) {
+    zero() {
       this.handleNumberInput(0);
     },
-    notes(event) {
+    notes() {
       if (this.gameState == STATUS.solving) {
         this.gameState = STATUS.notes;
       } else {
@@ -110,7 +110,7 @@ export default {
           }
       }
     },
-    givens(event) {
+    givens() {
       if (this.gameState == STATUS.givens) {
         numbers.newGivens = true;
         this.startSolving();
@@ -123,7 +123,7 @@ export default {
       this.unselect();
       this.numbers.solution = getSolution(this.numbers.grid);
     },
-    add(event) {
+    add() {
       let idx = cells.selected.idx;
       if (this.lastCellToAddCandidatesTo == idx) {
         this.numbers.candidates[idx] = "";
@@ -133,7 +133,7 @@ export default {
         this.reduceCandidateNumbersOfCell(idx);
         this.lastCellToAddCandidatesTo = idx;
       }
-    },addAll(event) {
+    },addAll() {
       this.unselect();
       this.lastCellToAddCandidatesTo = -1;
       if (this.addedAllCandidates) {
@@ -151,16 +151,17 @@ export default {
         this.addedAllCandidates = true;
       }
     },
-    wipe(event) {
+    wipe() {
       resetNumbers();
       this.unselect();
+      this.gameState = STATUS.givens;
     },
     unselect() {
       cells.peers = []; // Unhighlight cells
       cells.selected.idx = -1;
+      cells.selected.bid = -1;
     },
-    check(event) {
-      this.unselect();
+    check() {
       if (this.gameState != STATUS.solving) return;
       switch(this.checkState) {
         case CHECK.no:
@@ -172,12 +173,14 @@ export default {
           } else {
             this.checkState = CHECK.solution;
             this.numbers.showSolution = true;
+            this.unselect();
           }
           break;
         case CHECK.yes:
           this.checkState = CHECK.solution;
           this.numbers.showSolution = true;
           this.numbers.showWrong = false;
+          this.unselect();
           break;
         case CHECK.solution:
           this.checkState = CHECK.no;
