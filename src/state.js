@@ -24,7 +24,9 @@ export const config = reactive({
   remove: true,
   same: true,
   invalid: true,
-  remaining: true
+  remaining: true,
+  selected: true,
+  peers: true
 })
 
 export const resetNumbers = () => {

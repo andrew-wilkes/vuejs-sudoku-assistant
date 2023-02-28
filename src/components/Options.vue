@@ -17,6 +17,14 @@
             <input type="checkbox" name="remaining" v-model="config.remaining"/>
             <label for="remaining">Show remaining numbers</label>
         </div>
+        <div>
+            <input type="checkbox" name="selected" v-model="config.selected"/>
+            <label for="selected">Highlight selected cell</label>
+        </div>
+        <div>
+            <input type="checkbox" name="peers" v-model="config.peers"/>
+            <label for="peers">Highlight peer cells</label>
+        </div>
     </div>
 </template>
 

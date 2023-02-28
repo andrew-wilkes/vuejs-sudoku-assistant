@@ -35,10 +35,10 @@ export default {
       return this.numbers.grid[this.idx] > 10;
     },
     isHighlighted() {
-      return cells.peers.indexOf('' + this.idx) > -1;
+      return config.peers && cells.peers.indexOf('' + this.idx) > -1;
     },
     isSelected() {
-      return cells.selected.idx == this.idx;
+      return config.selected && cells.selected.idx == this.idx;
     },
     isWrong() {
       let n = this.numbers.grid[this.idx];
