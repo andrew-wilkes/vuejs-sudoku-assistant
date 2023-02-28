@@ -1,5 +1,5 @@
 <template>
-  <div class="sudoku-grid">
+  <div class="sudoku-grid" :class="{ chrome: isChrome }">
     <div class="box" v-for="n in 9">
       <Cell v-for="m in 9" @click="cellClicked(n, m)" :idx="getIndex(n, m)"></Cell>
     </div>
@@ -31,6 +31,15 @@ export default {
     },
     getIndex(bid, cid) {
       return numberIndex(bid - 1, cid - 1);
+    },
+    agentHas(keyword) {
+      console.log(navigator.userAgent);
+      return navigator.userAgent.toLowerCase().search(keyword.toLowerCase()) > -1;
+    }
+  },
+  computed: {
+    isChrome() {
+      return this.agentHas("CriOS") || this.agentHas("Chrome") || !!window.chrome;
     }
   }
 }
