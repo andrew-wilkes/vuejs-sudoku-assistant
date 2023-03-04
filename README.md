@@ -1,6 +1,8 @@
-# sudoku-assistant
+# Sudoku Assistant coded using VueJS
 
 This template should help get you started developing with Vue 3 in Vite.
+
+The Vue coding style used here is the *Options* style rather than *Composition*. If I re-write this code or develop it further, I will use the *Composition* style.
 
 ## Recommended IDE Setup
 
